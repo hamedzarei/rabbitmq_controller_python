@@ -50,10 +50,6 @@ def index(request):
                                     "destination": queue_name, "routing_key": "",
                                     "arguments": args},
                               auth=('rabbitmq', 'rabbitmq'))
-            return ok_response({
-                'd': r.text,
-                's': r.status_code
-            })
 
 
             return ok_response('created')
