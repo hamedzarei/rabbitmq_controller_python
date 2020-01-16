@@ -5,11 +5,12 @@ import json
 import requests
 # Create your views here.
 
+auth = (config.RABBITMQ['USERNAME'], config.RABBITMQ['PASSWORD'])
 def index(request):
     # TODO read from config
     if request.method == 'GET':
         users = requests.get(config.RABBITMQ['BASE_URL']+'users',
-                             auth=(config.RABBITMQ['USERNAME'], config.RABBITMQ['PASSWORD']))
+                             auth=auth)
         users = json.loads(users.content)
         return ok_response(users)
     elif request.method == 'POST':
@@ -18,7 +19,7 @@ def index(request):
 
         response = requests.put(config.RABBITMQ['BASE_URL']+'users/'+username,
                                 json=data,
-                     auth=('rabbitmq', 'rabbitmq'))
+                     auth=auth)
 
 
         status = response.status_code
@@ -28,16 +29,16 @@ def index(request):
             # set permission for user
             requests.put(config.RABBITMQ['BASE_URL']+'permissions/%2F/'+username,
                          json={"username":username,"vhost":"/","configure":".*","write":".*","read":".*"},
-                         auth=('rabbitmq', 'rabbitmq'))
+                         auth=auth)
             # set topic permission for user
             requests.put(config.RABBITMQ['BASE_URL']+'topic-permissions/%2F/' + username,
                          json={"username":username,"vhost":"/","exchange":".*","write":".*","read":".*"},
-                         auth=('rabbitmq', 'rabbitmq'))
+                         auth=auth)
             # create queue
             queue_name = username+'_queue'
             requests.put(config.RABBITMQ['BASE_URL']+'queues/%2F/' + queue_name,
                          json={"vhost":"/","name":queue_name,"durable":"true","auto_delete":"false","arguments":{}},
-                         auth=('rabbitmq', 'rabbitmq'))
+                         auth=auth)
 
             # set user access data (isin)
             args = {"x-match": "any"}
@@ -49,7 +50,7 @@ def index(request):
                               json={"vhost": "/", "source": "headers1", "destination_type": "q",
                                     "destination": queue_name, "routing_key": "",
                                     "arguments": args},
-                              auth=('rabbitmq', 'rabbitmq'))
+                              auth=auth)
 
 
             return ok_response('created')
