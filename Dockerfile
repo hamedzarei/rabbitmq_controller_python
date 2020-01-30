@@ -42,8 +42,8 @@ COPY . /code
 RUN pip3 install -r /code/requirements
 
 WORKDIR /code
-
-RUN chmod +x start.sh && cp start.sh /usr/bin/
+#
+#RUN chmod +x start.sh && cp start.sh /usr/bin/
 
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
 #ENTRYPOINT ["tail",  "-f",  "/dev/null"]
