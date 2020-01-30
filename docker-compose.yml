@@ -1,0 +1,55 @@
+version: "3"
+services:
+    db:
+      networks:
+        - mynet
+      image: "mcr.microsoft.com/mssql/server"
+#        image: "mcr.microsoft.com/mssql/server:2019-CTP2.3-ubuntu"
+      restart: always
+      ports:
+        - 1443:1443
+        - 1433:1433
+#        volumes:
+#            - $PWD/data/mssql-data:/var/opt/mssql
+#            - /etc/timezone:/etc/timezone:ro
+      environment:
+        SA_PASSWORD: "Your_password123"
+        ACCEPT_EULA: "Y"
+        TZ: "Asia/Tehran"
+
+    rabbitmq_controller:
+      networks:
+        - mynet
+      build:
+        context: .
+#      image: manage-request
+      restart: always
+      ports:
+        - "8000:8000"
+      volumes:
+        - $PWD:/code
+
+    rabbitmq:
+        image: "rabbitmq:3-management"
+        networks:
+          - mynet
+        restart: always
+        environment:
+          RABBITMQ_DEFAULT_USER: "rabbitmq"
+          RABBITMQ_DEFAULT_PASS: "rabbitmq"
+          RABBITMQ_DEFAULT_VHOST: "/"
+        ports:
+          - "15672:15672"
+          - "5672:5672"
+
+#volumes:
+#  mssql-data:
+
+networks:
+  mynet:
+#    driver: bridge
+#    ipam:
+#     config:
+#       - subnet: 10.5.0.0/16
+
+
