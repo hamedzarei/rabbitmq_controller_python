@@ -2,17 +2,6 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-from users.models import Rabbitmq
-import config
-
-hostname = config.MSSQL['HOSTNAME']
-
-def migrate():
-    #
-    Rabbitmq.create_DB(hostname, None, None)
-#     create table
-    Rabbitmq.create_table_users()
-    Rabbitmq.create_table_bindings()
 
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'rabbitmq_controller.settings')
@@ -28,5 +17,4 @@ def main():
 
 
 if __name__ == '__main__':
-    migrate()
     main()

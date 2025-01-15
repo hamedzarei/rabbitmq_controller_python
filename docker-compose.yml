@@ -3,14 +3,14 @@ services:
     db:
       networks:
         - mynet
-      image: "mcr.microsoft.com/mssql/server"
+      image: "microsoft/mssql-server-linux"
 #        image: "mcr.microsoft.com/mssql/server:2019-CTP2.3-ubuntu"
       restart: always
       ports:
         - 1443:1443
         - 1433:1433
-#        volumes:
-#            - $PWD/data/mssql-data:/var/opt/mssql
+      volumes:
+        - $PWD/data/mssql-data:/var/opt/mssql
 #            - /etc/timezone:/etc/timezone:ro
       environment:
         SA_PASSWORD: "Your_password123"

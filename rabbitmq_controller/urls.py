@@ -20,3 +20,19 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls'))
 ]
+
+
+# run commands once
+from users.models import Rabbitmq
+import config
+
+hostname = config.MSSQL['HOSTNAME']
+
+def migrate():
+    #
+    Rabbitmq.create_DB(hostname, None, None)
+#     create table
+    Rabbitmq.create_table_users()
+    Rabbitmq.create_table_bindings()
+
+migrate()
